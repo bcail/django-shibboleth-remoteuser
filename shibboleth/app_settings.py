@@ -10,6 +10,8 @@ default_shib_attributes = {
 SHIB_ATTRIBUTE_MAP = getattr(settings, 'SHIBBOLETH_ATTRIBUTE_MAP', default_shib_attributes)
 #Set to true if you are testing and want to insert sample headers.
 SHIB_MOCK_HEADERS = getattr(settings, 'SHIBBOLETH_MOCK_HEADERS', False)
+DEBUG = getattr(settings, 'DEBUG', False)
+SHIB_MOCK_USER = getattr(settings, 'SHIB_MOCK_USER', {})
 
 LOGIN_URL = getattr(settings, 'LOGIN_URL', None)
 

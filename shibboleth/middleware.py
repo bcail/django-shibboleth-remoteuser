@@ -2,7 +2,7 @@ from django.contrib.auth.middleware import RemoteUserMiddleware
 from django.contrib import auth
 from django.core.exceptions import ImproperlyConfigured
 
-from shibboleth.app_settings import SHIB_ATTRIBUTE_MAP, LOGOUT_SESSION_KEY
+from shibboleth.app_settings import SHIB_ATTRIBUTE_MAP, LOGOUT_SESSION_KEY, DEBUG, SHIB_MOCK_USER
 
 class ShibbolethRemoteUserMiddleware(RemoteUserMiddleware):
     """
@@ -100,3 +100,16 @@ class ShibbolethRemoteUserMiddleware(RemoteUserMiddleware):
 
 class ShibbolethValidationError(Exception):
     pass
+
+
+class MockShibbolethRemoteUserMiddleware(ShibbolethRemoteUserMiddleware):
+    '''For development, allow reading in Shibboleth information from settings
+    and using that to login a user.'''
+
+    def process_request(self, request):
+        if DEBUG:
+            if SHIB_MOCK_USER:
+                for user_attribute in SHIB_MOCK_USER:
+                    request.META[user_attribute] = SHIB_MOCK_USER[user_attribute]
+        super(MockShibbolethRemoteUserMiddleware, self).process_request(request)
+
